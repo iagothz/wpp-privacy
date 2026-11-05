@@ -10,11 +10,23 @@
   <header>
     <img src="../icons/icon48.png" alt="" width="28" height="28">
     <h1>WPP Privacy</h1>
-    <label class="switch master" title="Liga/desliga tudo">
+    <label class="switch master" title="Liga/desliga o blur">
       <input type="checkbox" data-key="enabled">
       <span class="slider"></span>
     </label>
   </header>
+
+  <nav class="actions">
+    <button type="button" id="panic" title="Cobre a tela com uma capa neutra">
+      <span class="emoji">🚨</span>Pânico
+    </button>
+    <button type="button" id="presentation" title="Tudo borrado, sem revelar">
+      <span class="emoji">🖥️</span>Apresentação
+    </button>
+    <button type="button" id="lock" title="Bloqueia o WhatsApp Web agora">
+      <span class="emoji">🔒</span>Bloquear
+    </button>
+  </nav>
 
   <main id="options">
     <p class="section">Borrar</p>
@@ -44,13 +56,29 @@
       <span class="switch"><input type="checkbox" data-key="blurOnLeave"><span class="slider"></span></span>
     </label>
 
+    <label class="row">
+      <span>Quais conversas</span>
+      <select data-key="scope">
+        <option value="all">Todas</option>
+        <option value="selected">Só as protegidas 🔒</option>
+      </select>
+    </label>
+    <label class="row">
+      <span>Revelar com</span>
+      <select data-key="revealMode">
+        <option value="hover">Passar o mouse</option>
+        <option value="click">Clique</option>
+        <option value="none">Só segurando Ctrl</option>
+      </select>
+    </label>
+
     <p class="section">Intensidade <output id="intensityValue"></output></p>
-    <input type="range" id="intensity" data-key="intensity" min="2" max="20" step="1">
+    <input type="range" data-key="intensity" min="2" max="20" step="1">
   </main>
 
   <footer>
-    Passe o mouse para revelar. Atalho: <kbd id="shortcut">Alt+Shift+X</kbd>
-    · <a href="#" id="shortcuts">alterar</a>
+    <a href="#" id="openOptions">Todas as opções</a>
+    <span><kbd id="shortcut">Alt+Shift+X</kbd> liga/desliga</span>
   </footer>
 
   <script src="../src/defaults.js"></script>

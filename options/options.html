@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WPP Privacy · Opções</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <header class="top">
+    <img src="../icons/icon48.png" alt="" width="36" height="36">
+    <div>
+      <h1>WPP Privacy</h1>
+      <p>Tudo fica só no seu navegador. Nada é enviado para lugar nenhum.</p>
+    </div>
+    <span id="saved" class="saved">Salvo ✓</span>
+  </header>
+
+  <main>
+    <!-- ================= Privacidade ================= -->
+    <section>
+      <h2>🔒 Privacidade</h2>
+
+      <label class="row">
+        <span><b>Blur ativo</b><small>Chave geral do blur (atalho Alt+Shift+X).</small></span>
+        <span class="switch"><input type="checkbox" data-key="enabled"><span class="slider"></span></span>
+      </label>
+      <div class="grid2">
+        <label class="row"><span>Mensagens da conversa</span>
+          <span class="switch"><input type="checkbox" data-key="blurMessages"><span class="slider"></span></span></label>
+        <label class="row"><span>Prévia na lista</span>
+          <span class="switch"><input type="checkbox" data-key="blurPreviews"><span class="slider"></span></span></label>
+        <label class="row"><span>Nomes</span>
+          <span class="switch"><input type="checkbox" data-key="blurNames"><span class="slider"></span></span></label>
+        <label class="row"><span>Fotos de perfil</span>
+          <span class="switch"><input type="checkbox" data-key="blurAvatars"><span class="slider"></span></span></label>
+        <label class="row"><span>Caixa de digitação</span>
+          <span class="switch"><input type="checkbox" data-key="blurInput"><span class="slider"></span></span></label>
+        <label class="row"><span>Tela toda ao sair da janela</span>
+          <span class="switch"><input type="checkbox" data-key="blurOnLeave"><span class="slider"></span></span></label>
+      </div>
+
+      <label class="row">
+        <span><b>Intensidade</b> <output id="intensityValue"></output></span>
+        <input type="range" data-key="intensity" min="2" max="20" step="1">
+      </label>
+      <label class="row">
+        <span><b>Quais conversas</b><small>"Só as protegidas" borra apenas as conversas marcadas com 🔒.</small></span>
+        <select data-key="scope">
+          <option value="all">Todas</option>
+          <option value="selected">Só as protegidas</option>
+        </select>
+      </label>
+      <label class="row">
+        <span><b>Revelar com</b><small>No modo clique, o 1º clique só revela (não abre foto ou link).</small></span>
+        <select data-key="revealMode">
+          <option value="hover">Passar o mouse</option>
+          <option value="click">Clique</option>
+          <option value="none">Só segurando Ctrl</option>
+        </select>
+      </label>
+      <label class="row">
+        <span><b>Segurar Ctrl revela tudo</b><small>Solte o Ctrl e tudo volta a borrar.</small></span>
+        <span class="switch"><input type="checkbox" data-key="ctrlReveal"><span class="slider"></span></span>
+      </label>
+      <label class="row">
+        <span><b>Esconder status de presença</b><small>Oculta "online", "visto por último", "digitando..." e "gravando áudio...".</small></span>
+        <span class="switch"><input type="checkbox" data-key="hidePresence"><span class="slider"></span></span>
+      </label>
+
+      <h3>Conversas protegidas</h3>
+      <p class="help">Para proteger uma conversa, abra-a no WhatsApp Web e clique no 🔒 que aparece abaixo do cabeçalho.</p>
+      <ul id="protectedList" class="list"></ul>
+    </section>
+
+    <!-- ================= Pânico e bloqueio ================= -->
+    <section>
+      <h2>🚨 Pânico e bloqueio</h2>
+
+      <label class="row">
+        <span><b>Capa do botão de pânico</b><small>Atalho Alt+Shift+Z. Aperte de novo para voltar.</small></span>
+        <select data-key="panicStyle">
+          <option value="sheet">Planilha em branco</option>
+          <option value="blank">Página vazia</option>
+        </select>
+      </label>
+      <label class="row">
+        <span><b>Bloquear após inatividade</b><small>Atalho Alt+Shift+L bloqueia na hora.</small></span>
+        <select data-key="idleMinutes" data-type="number">
+          <option value="0">Nunca</option>
+          <option value="1">1 minuto</option>
+          <option value="2">2 minutos</option>
+          <option value="5">5 minutos</option>
+          <option value="10">10 minutos</option>
+          <option value="15">15 minutos</option>
+          <option value="30">30 minutos</option>
+        </select>
+      </label>
+
+      <div class="row stack">
+        <span><b>PIN de desbloqueio</b><small id="pinStatus"></small></span>
+        <form id="pinForm" class="inline">
+          <input id="pin1" type="password" inputmode="numeric" autocomplete="new-password" placeholder="Novo PIN" minlength="4">
+          <input id="pin2" type="password" inputmode="numeric" autocomplete="new-password" placeholder="Repita o PIN" minlength="4">
+          <button type="submit">Salvar PIN</button>
+          <button type="button" id="pinRemove" class="ghost">Remover</button>
+        </form>
+        <small id="pinMsg" class="msg"></small>
+      </div>
+      <p class="help">O bloqueio protege contra olhares, não é segurança forte: quem usa o computador pode desativar a extensão.</p>
+    </section>
+
+    <!-- ================= Escrita ================= -->
+    <section>
+      <h2>✍️ Escrita</h2>
+
+      <label class="row">
+        <span><b>Atalhos de formatação</b><small>Ctrl+B <code>*negrito*</code> · Ctrl+I <code>_itálico_</code> · Ctrl+Shift+X <code>~tachado~</code> · Ctrl+Shift+K <code>```mono```</code></small></span>
+        <span class="switch"><input type="checkbox" data-key="formatShortcuts"><span class="slider"></span></span>
+      </label>
+      <label class="row">
+        <span><b>Contador de caracteres</b><small>Aparece acima da caixa de digitação.</small></span>
+        <span class="switch"><input type="checkbox" data-key="charCounter"><span class="slider"></span></span>
+      </label>
+
+      <h3>Respostas rápidas</h3>
+      <p class="help">Digite o atalho na conversa e aperte <kbd>Espaço</kbd> ou <kbd>Tab</kbd>: ele vira o texto completo. Nada é enviado sozinho.</p>
+      <div id="replies"></div>
+      <button type="button" id="addReply" class="ghost">+ Adicionar resposta</button>
+    </section>
+
+    <!-- ================= Notas ================= -->
+    <section>
+      <h2>📝 Notas por conversa</h2>
+      <label class="row">
+        <span><b>Mostrar botão de notas</b><small>O 📝 aparece abaixo do cabeçalho da conversa aberta.</small></span>
+        <span class="switch"><input type="checkbox" data-key="notesEnabled"><span class="slider"></span></span>
+      </label>
+      <ul id="notesList" class="list"></ul>
+    </section>
+
+    <!-- ================= Visual ================= -->
+    <section>
+      <h2>🎨 Visual</h2>
+      <label class="row">
+        <span><b>Largura total</b><small>Usa a tela toda em monitores largos.</small></span>
+        <span class="switch"><input type="checkbox" data-key="fullWidth"><span class="slider"></span></span>
+      </label>
+      <label class="row">
+        <span><b>Modo compacto</b><small>Menos espaço entre as mensagens.</small></span>
+        <span class="switch"><input type="checkbox" data-key="compact"><span class="slider"></span></span>
+      </label>
+      <label class="row">
+        <span><b>Tamanho da fonte</b> <output id="fontScaleValue"></output></span>
+        <input type="range" data-key="fontScale" min="80" max="150" step="5">
+      </label>
+      <label class="row">
+        <span><b>Tema</b><small>Cores dos balões e do fundo da conversa.</small></span>
+        <select data-key="theme" id="themeSelect"></select>
+      </label>
+      <div id="customColors" class="colors">
+        <label>Enviadas <input type="color" data-key="customOutgoing"></label>
+        <label>Recebidas <input type="color" data-key="customIncoming"></label>
+        <label>Fundo <input type="color" data-key="customBackground"></label>
+      </div>
+
+      <h3>Palavras-chave em destaque</h3>
+      <p class="help">Mensagens com essas palavras ganham destaque amarelo e uma marca lateral (visível mesmo com blur). Separe por vírgula.</p>
+      <input type="text" id="keywords" class="wide" placeholder="ex.: urgente, pix, reunião">
+    </section>
+
+    <!-- ================= Atalhos ================= -->
+    <section>
+      <h2>⌨️ Atalhos de teclado</h2>
+      <ul id="commands" class="list"></ul>
+      <button type="button" id="editShortcuts" class="ghost">Alterar atalhos</button>
+    </section>
+  </main>
+
+  <script src="../src/defaults.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

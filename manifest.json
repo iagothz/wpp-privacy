@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "WPP Privacy",
   "short_name": "WPP Privacy",
-  "version": "0.1.0",
-  "description": "Privacidade no WhatsApp Web: borra mensagens, prévias, nomes e fotos até você passar o mouse.",
+  "version": "0.2.0",
+  "description": "Privacidade e utilidades para o WhatsApp Web: blur, botão de pânico, bloqueio com PIN, respostas rápidas, notas e temas.",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
@@ -22,16 +22,41 @@
       "32": "icons/icon32.png"
     }
   },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
   "commands": {
     "toggle-privacy": {
       "suggested_key": { "default": "Alt+Shift+X" },
       "description": "Liga/desliga o blur"
+    },
+    "panic": {
+      "suggested_key": { "default": "Alt+Shift+Z" },
+      "description": "Botão de pânico (cobre a tela)"
+    },
+    "presentation": {
+      "suggested_key": { "default": "Alt+Shift+P" },
+      "description": "Liga/desliga o modo apresentação"
+    },
+    "lock": {
+      "suggested_key": { "default": "Alt+Shift+L" },
+      "description": "Bloquear agora"
     }
   },
   "content_scripts": [
     {
       "matches": ["https://web.whatsapp.com/*"],
-      "js": ["src/defaults.js", "src/content.js"],
+      "js": [
+        "src/defaults.js",
+        "src/core.js",
+        "src/features/tagging.js",
+        "src/features/blur.js",
+        "src/features/overlays.js",
+        "src/features/composer.js",
+        "src/features/chat-tools.js",
+        "src/features/visual.js"
+      ],
       "css": ["src/content.css"],
       "run_at": "document_start"
     }

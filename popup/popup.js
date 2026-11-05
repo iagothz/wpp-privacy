@@ -1,41 +1,63 @@
-const DEFAULTS = globalThis.WPP_DEFAULTS;
 const inputs = document.querySelectorAll("[data-key]");
 const options = document.getElementById("options");
 const intensityValue = document.getElementById("intensityValue");
+const panicBtn = document.getElementById("panic");
+const presentationBtn = document.getElementById("presentation");
 
-function render(settings) {
+function renderSync(s) {
   for (const input of inputs) {
-    const value = settings[input.dataset.key];
+    const value = s[input.dataset.key];
     if (input.type === "checkbox") input.checked = !!value;
     else input.value = value;
   }
-  intensityValue.textContent = `(${settings.intensity}px)`;
-  options.classList.toggle("disabled", !settings.enabled);
+  intensityValue.textContent = `(${s.intensity}px)`;
+  options.classList.toggle("disabled", !s.enabled);
 }
 
-chrome.storage.sync.get(DEFAULTS, render);
+function renderLocal(l) {
+  panicBtn.classList.toggle("active", !!l.panic);
+  presentationBtn.classList.toggle("active", !!l.presentation);
+}
 
-// Mantém o popup em sincronia se o atalho de teclado mudar algo enquanto está aberto.
+const loadSync = () => chrome.storage.sync.get(WPP_DEFAULTS, renderSync);
+const loadLocal = () => chrome.storage.local.get(WPP_LOCAL_DEFAULTS, renderLocal);
+loadSync();
+loadLocal();
+
+// Mantém o popup em sincronia se um atalho mudar algo enquanto ele está aberto.
 chrome.storage.onChanged.addListener((_changes, area) => {
-  if (area === "sync") chrome.storage.sync.get(DEFAULTS, render);
+  if (area === "sync") loadSync();
+  if (area === "local") loadLocal();
 });
 
 for (const input of inputs) {
   const event = input.type === "range" ? "input" : "change";
   input.addEventListener(event, () => {
     const key = input.dataset.key;
-    const value = input.type === "checkbox" ? input.checked : Number(input.value);
+    let value = input.value;
+    if (input.type === "checkbox") value = input.checked;
+    else if (input.type === "range") value = Number(value);
     chrome.storage.sync.set({ [key]: value });
   });
 }
 
-// Mostra o atalho configurado de verdade (o usuário pode ter mudado).
-chrome.commands.getAll((commands) => {
-  const cmd = commands.find((c) => c.name === "toggle-privacy");
-  document.getElementById("shortcut").textContent = cmd?.shortcut || "não definido";
+async function toggleLocal(key) {
+  const current = await chrome.storage.local.get({ [key]: false });
+  await chrome.storage.local.set({ [key]: !current[key] });
+}
+panicBtn.addEventListener("click", () => toggleLocal("panic"));
+presentationBtn.addEventListener("click", () => toggleLocal("presentation"));
+document.getElementById("lock").addEventListener("click", () => {
+  chrome.storage.local.set({ locked: true });
+  window.close();
 });
 
-document.getElementById("shortcuts").addEventListener("click", (e) => {
+chrome.commands.getAll((commands) => {
+  const cmd = commands.find((c) => c.name === "toggle-privacy");
+  document.getElementById("shortcut").textContent = cmd?.shortcut || "—";
+});
+
+document.getElementById("openOptions").addEventListener("click", (e) => {
   e.preventDefault();
-  chrome.tabs.create({ url: "chrome://extensions/shortcuts" });
+  chrome.runtime.openOptionsPage();
 });

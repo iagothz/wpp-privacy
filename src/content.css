@@ -1,64 +1,108 @@
 /*
- * WPP Privacy: regras de blur.
- * Cada bloco só vale quando o <html> tem "wpp-on" + a classe da opção.
- * Os seletores evitam classes ofuscadas do WhatsApp (que mudam a cada versão)
- * e usam IDs, roles, aria e nomes de classe estáveis.
+ * WPP Privacy: regras estáticas.
+ * O JS (src/features/*) marca elementos com data-wpp-* e liga classes no <html>.
+ *
+ * Classes no <html>:
+ *   wpp-on               blur ligado
+ *   wpp-<opção>          cada opção de blur ligada (wpp-blurMessages...)
+ *   wpp-target-open      a conversa aberta deve ser borrada (todas, ou ela é protegida)
+ *   wpp-reveal-hover     revelar passando o mouse
+ *   wpp-ctrl-reveal      Ctrl está pressionado: revela tudo
+ *   wpp-away             a janela perdeu o foco
+ *
+ * Atributos:
+ *   data-wpp="msg|name|preview|presence"   o que o elemento é
+ *   data-wpp-target                        item da lista que deve ser borrado
+ *   data-wpp-typing                        "digitando...", "gravando áudio..."
+ *   data-wpp-revealed                      mensagem revelada por clique
  */
 
 :root { --wpp-blur: 8px; }
 
-/* ---------- Mensagens da conversa aberta ---------- */
-/* O content.js marca cada mensagem com data-wpp="msg" (ver tagMessages). */
-html.wpp-on.wpp-blurMessages [data-wpp="msg"] {
-  filter: blur(var(--wpp-blur));
-  transition: filter .15s ease;
-}
-html.wpp-on.wpp-blurMessages [data-wpp="msg"]:hover {
-  filter: none;
-}
+/* ================= Blur ================= */
 
-/* ---------- Lista de conversas: prévia da última mensagem ---------- */
-html.wpp-on.wpp-blurPreviews #pane-side [role="listitem"] [data-wpp="preview"],
-html.wpp-on.wpp-blurPreviews #pane-side [role="row"] [data-wpp="preview"] {
-  filter: blur(var(--wpp-blur));
-  transition: filter .15s ease;
-}
-
-/* ---------- Nomes ---------- */
-html.wpp-on.wpp-blurNames #pane-side [data-wpp="name"],
-html.wpp-on.wpp-blurNames #main header [data-wpp="name"] {
+html.wpp-on.wpp-blurMessages.wpp-target-open [data-wpp="msg"],
+html.wpp-on.wpp-blurPreviews #pane-side [data-wpp-target] [data-wpp="preview"],
+html.wpp-on.wpp-blurNames #pane-side [data-wpp-target] [data-wpp="name"],
+html.wpp-on.wpp-blurNames.wpp-target-open #main header [data-wpp="name"],
+html.wpp-on.wpp-blurNames.wpp-target-open #main header [data-wpp="presence"],
+html.wpp-on.wpp-blurAvatars #pane-side [data-wpp-target] img,
+html.wpp-on.wpp-blurAvatars.wpp-target-open #main header img,
+html.wpp-on.wpp-blurInput.wpp-target-open #main footer [contenteditable="true"] {
   filter: blur(var(--wpp-blur));
   transition: filter .15s ease;
 }
 
-/* ---------- Fotos de perfil ---------- */
-html.wpp-on.wpp-blurAvatars #pane-side img,
-html.wpp-on.wpp-blurAvatars #main header img {
-  filter: blur(var(--wpp-blur));
-  transition: filter .15s ease;
+/* ================= Revelar ================= */
+
+/* Passando o mouse */
+html.wpp-reveal-hover [data-wpp="msg"]:hover,
+html.wpp-reveal-hover #pane-side [data-wpp-target]:hover [data-wpp],
+html.wpp-reveal-hover #pane-side [data-wpp-target]:hover img,
+html.wpp-reveal-hover #main header:hover [data-wpp],
+html.wpp-reveal-hover #main header:hover img,
+html.wpp-reveal-hover #main footer [contenteditable="true"]:hover,
+/* Clique */
+[data-wpp-revealed],
+/* Segurando Ctrl */
+html.wpp-ctrl-reveal [data-wpp],
+html.wpp-ctrl-reveal #pane-side img,
+html.wpp-ctrl-reveal #main header img,
+html.wpp-ctrl-reveal #main footer [contenteditable="true"] {
+  filter: none !important;
 }
 
-/* Hover na conversa da lista revela nome, prévia e foto dela */
-html.wpp-on #pane-side [role="listitem"]:hover [data-wpp],
-html.wpp-on #pane-side [role="listitem"]:hover img,
-html.wpp-on #pane-side [role="row"]:hover [data-wpp],
-html.wpp-on #pane-side [role="row"]:hover img,
-html.wpp-on #main header:hover [data-wpp],
-html.wpp-on #main header:hover img {
-  filter: none;
+/* No modo clique, mostra que a mensagem é clicável */
+html.wpp-on.wpp-reveal-click.wpp-blurMessages.wpp-target-open [data-wpp="msg"]:not([data-wpp-revealed]) {
+  cursor: pointer;
 }
 
-/* ---------- Caixa de digitação ---------- */
-html.wpp-on.wpp-blurInput #main footer [contenteditable="true"] {
-  filter: blur(var(--wpp-blur));
-  transition: filter .15s ease;
-}
-html.wpp-on.wpp-blurInput #main footer [contenteditable="true"]:hover,
-html.wpp-on.wpp-blurInput #main footer [contenteditable="true"]:focus {
-  filter: none;
+/* ================= Presença ================= */
+
+html.wpp-hidePresence #main header [data-wpp="presence"],
+html.wpp-hidePresence [data-wpp-typing] {
+  visibility: hidden !important;
 }
 
-/* ---------- Saiu da janela: borra tudo ---------- */
+/* ================= Saiu da janela ================= */
+
 html.wpp-on.wpp-blurOnLeave.wpp-away #app {
   filter: blur(calc(var(--wpp-blur) * 2.5));
+}
+
+/* ================= Visual ================= */
+
+/* Largura total: o JS marca os contêineres que limitam a largura */
+html.wpp-fullWidth [data-wpp-wide] {
+  max-width: none !important;
+  width: 100% !important;
+  left: 0 !important;
+  top: 0 !important;
+  height: 100% !important;
+}
+
+/* Modo compacto: menos espaço entre mensagens */
+html.wpp-compact #main [role="row"] {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+html.wpp-compact [data-wpp="msg"] {
+  margin-top: 1px !important;
+  margin-bottom: 1px !important;
+}
+
+/* Tamanho da fonte das mensagens e da caixa de digitação */
+html.wpp-fontScale [data-wpp="msg"] .selectable-text,
+html.wpp-fontScale #main footer [contenteditable="true"] {
+  font-size: calc(14.2px * var(--wpp-font-scale, 1)) !important;
+  line-height: 1.4 !important;
+}
+
+/* Palavras-chave: destaque no texto (CSS Custom Highlight API) e marca lateral */
+::highlight(wpp-kw) {
+  background-color: #ffd54f;
+  color: #111b21;
+}
+[data-wpp-kw] {
+  box-shadow: inset 4px 0 0 #f5a623 !important;
 }

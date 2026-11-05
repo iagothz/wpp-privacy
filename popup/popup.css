@@ -3,7 +3,9 @@
   --fg: #111b21;
   --muted: #667781;
   --line: #e9edef;
+  --soft: #f0f2f5;
   --accent: #00a884;
+  --danger: #d93025;
   --off: #c5ccd0;
   color-scheme: light dark;
 }
@@ -13,6 +15,7 @@
     --fg: #e9edef;
     --muted: #8696a0;
     --line: #222d34;
+    --soft: #202c33;
     --off: #3b4a54;
   }
 }
@@ -20,7 +23,7 @@
 * { box-sizing: border-box; }
 
 body {
-  width: 300px;
+  width: 320px;
   margin: 0;
   background: var(--bg);
   color: var(--fg);
@@ -36,8 +39,32 @@ header {
 }
 header h1 { flex: 1; margin: 0; font-size: 15px; font-weight: 600; }
 
-main { padding: 6px 16px 12px; transition: opacity .15s; }
-main.disabled { opacity: .45; pointer-events: none; }
+.actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 12px 16px 4px;
+}
+.actions button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--soft);
+  color: var(--fg);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.actions button:hover { border-color: var(--accent); }
+.actions button.active { border-color: var(--danger); color: var(--danger); font-weight: 600; }
+.actions .emoji { font-size: 18px; }
+
+main { padding: 0 16px 12px; transition: opacity .15s; }
+main.disabled .row:not(.keep), main.disabled input[type="range"] { opacity: .45; pointer-events: none; }
 
 .section {
   margin: 12px 0 4px;
@@ -54,8 +81,18 @@ main.disabled { opacity: .45; pointer-events: none; }
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 7px 0;
+  padding: 6px 0;
   cursor: pointer;
+}
+
+select {
+  max-width: 150px;
+  padding: 4px 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
 }
 
 .switch { position: relative; display: inline-block; width: 34px; height: 20px; flex: none; }
@@ -82,6 +119,9 @@ main.disabled { opacity: .45; pointer-events: none; }
 input[type="range"] { width: 100%; accent-color: var(--accent); }
 
 footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px 16px 14px;
   border-top: 1px solid var(--line);
   color: var(--muted);
@@ -93,4 +133,4 @@ kbd {
   border-radius: 4px;
   font: 11px ui-monospace, Consolas, monospace;
 }
-a { color: var(--accent); }
+a { color: var(--accent); font-weight: 600; }
