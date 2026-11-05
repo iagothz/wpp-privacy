@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WPP Privacy</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <img src="../icons/icon48.png" alt="" width="28" height="28">
+    <h1>WPP Privacy</h1>
+    <label class="switch master" title="Liga/desliga tudo">
+      <input type="checkbox" data-key="enabled">
+      <span class="slider"></span>
+    </label>
+  </header>
+
+  <main id="options">
+    <p class="section">Borrar</p>
+
+    <label class="row">
+      <span>Mensagens da conversa</span>
+      <span class="switch"><input type="checkbox" data-key="blurMessages"><span class="slider"></span></span>
+    </label>
+    <label class="row">
+      <span>Prévia na lista de conversas</span>
+      <span class="switch"><input type="checkbox" data-key="blurPreviews"><span class="slider"></span></span>
+    </label>
+    <label class="row">
+      <span>Nomes de contatos e grupos</span>
+      <span class="switch"><input type="checkbox" data-key="blurNames"><span class="slider"></span></span>
+    </label>
+    <label class="row">
+      <span>Fotos de perfil</span>
+      <span class="switch"><input type="checkbox" data-key="blurAvatars"><span class="slider"></span></span>
+    </label>
+    <label class="row">
+      <span>Caixa de digitação</span>
+      <span class="switch"><input type="checkbox" data-key="blurInput"><span class="slider"></span></span>
+    </label>
+    <label class="row">
+      <span>Tela toda ao sair da janela</span>
+      <span class="switch"><input type="checkbox" data-key="blurOnLeave"><span class="slider"></span></span>
+    </label>
+
+    <p class="section">Intensidade <output id="intensityValue"></output></p>
+    <input type="range" id="intensity" data-key="intensity" min="2" max="20" step="1">
+  </main>
+
+  <footer>
+    Passe o mouse para revelar. Atalho: <kbd id="shortcut">Alt+Shift+X</kbd>
+    · <a href="#" id="shortcuts">alterar</a>
+  </footer>
+
+  <script src="../src/defaults.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

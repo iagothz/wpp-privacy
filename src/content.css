@@ -1,0 +1,65 @@
+/*
+ * WPP Privacy: regras de blur.
+ * Cada bloco só vale quando o <html> tem "wpp-on" + a classe da opção.
+ * Os seletores evitam classes ofuscadas do WhatsApp (que mudam a cada versão)
+ * e usam IDs, roles, aria e nomes de classe estáveis.
+ */
+
+:root { --wpp-blur: 8px; }
+
+/* ---------- Mensagens da conversa aberta ---------- */
+html.wpp-on.wpp-blurMessages #main .message-in,
+html.wpp-on.wpp-blurMessages #main .message-out {
+  filter: blur(var(--wpp-blur));
+  transition: filter .15s ease;
+}
+html.wpp-on.wpp-blurMessages #main .message-in:hover,
+html.wpp-on.wpp-blurMessages #main .message-out:hover {
+  filter: none;
+}
+
+/* ---------- Lista de conversas: prévia da última mensagem ---------- */
+html.wpp-on.wpp-blurPreviews #pane-side [role="listitem"] [data-wpp="preview"],
+html.wpp-on.wpp-blurPreviews #pane-side [role="row"] [data-wpp="preview"] {
+  filter: blur(var(--wpp-blur));
+  transition: filter .15s ease;
+}
+
+/* ---------- Nomes ---------- */
+html.wpp-on.wpp-blurNames #pane-side [data-wpp="name"],
+html.wpp-on.wpp-blurNames #main header [data-wpp="name"] {
+  filter: blur(var(--wpp-blur));
+  transition: filter .15s ease;
+}
+
+/* ---------- Fotos de perfil ---------- */
+html.wpp-on.wpp-blurAvatars #pane-side img,
+html.wpp-on.wpp-blurAvatars #main header img {
+  filter: blur(var(--wpp-blur));
+  transition: filter .15s ease;
+}
+
+/* Hover na conversa da lista revela nome, prévia e foto dela */
+html.wpp-on #pane-side [role="listitem"]:hover [data-wpp],
+html.wpp-on #pane-side [role="listitem"]:hover img,
+html.wpp-on #pane-side [role="row"]:hover [data-wpp],
+html.wpp-on #pane-side [role="row"]:hover img,
+html.wpp-on #main header:hover [data-wpp],
+html.wpp-on #main header:hover img {
+  filter: none;
+}
+
+/* ---------- Caixa de digitação ---------- */
+html.wpp-on.wpp-blurInput #main footer [contenteditable="true"] {
+  filter: blur(var(--wpp-blur));
+  transition: filter .15s ease;
+}
+html.wpp-on.wpp-blurInput #main footer [contenteditable="true"]:hover,
+html.wpp-on.wpp-blurInput #main footer [contenteditable="true"]:focus {
+  filter: none;
+}
+
+/* ---------- Saiu da janela: borra tudo ---------- */
+html.wpp-on.wpp-blurOnLeave.wpp-away #app {
+  filter: blur(calc(var(--wpp-blur) * 2.5));
+}

@@ -1,0 +1,96 @@
+:root {
+  --bg: #ffffff;
+  --fg: #111b21;
+  --muted: #667781;
+  --line: #e9edef;
+  --accent: #00a884;
+  --off: #c5ccd0;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111b21;
+    --fg: #e9edef;
+    --muted: #8696a0;
+    --line: #222d34;
+    --off: #3b4a54;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  width: 300px;
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 13px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+header h1 { flex: 1; margin: 0; font-size: 15px; font-weight: 600; }
+
+main { padding: 6px 16px 12px; transition: opacity .15s; }
+main.disabled { opacity: .45; pointer-events: none; }
+
+.section {
+  margin: 12px 0 4px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.section output { text-transform: none; letter-spacing: 0; font-weight: 400; }
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  cursor: pointer;
+}
+
+.switch { position: relative; display: inline-block; width: 34px; height: 20px; flex: none; }
+.switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute; inset: 0;
+  background: var(--off);
+  border-radius: 999px;
+  transition: background .15s;
+  cursor: pointer;
+}
+.slider::before {
+  content: "";
+  position: absolute; left: 3px; top: 3px;
+  width: 14px; height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform .15s;
+}
+.switch input:checked + .slider { background: var(--accent); }
+.switch input:checked + .slider::before { transform: translateX(14px); }
+.switch input:focus-visible + .slider { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+
+footer {
+  padding: 10px 16px 14px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+kbd {
+  padding: 1px 5px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font: 11px ui-monospace, Consolas, monospace;
+}
+a { color: var(--accent); }
