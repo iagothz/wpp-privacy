@@ -45,9 +45,13 @@ Clique no 📝 abaixo do cabeçalho para abrir um bloco de anotações daquela c
 
 Dá para trocar em `chrome://extensions/shortcuts`.
 
-## Instalação (modo desenvolvedor)
+## Instalação
 
-1. Baixe ou clone este repositório:
+**Para usar:** baixe o **[wpp-privacy.zip](https://github.com/iagothz/wpp-privacy/releases/latest/download/wpp-privacy.zip)** e siga o **[guia de instalação](INSTALAR.md)**. Esse link sempre aponta para a versão mais recente, então é ele que você manda para os amigos.
+
+**Para desenvolver:**
+
+1. Clone o repositório:
    ```bash
    git clone https://github.com/iagothz/wpp-privacy.git
    ```
@@ -82,6 +86,15 @@ src/background.js          atalhos de teclado e badge
 popup/                     controles rápidos
 options/                   página de opções completa
 ```
+
+## Publicar uma versão nova
+
+1. Aumente `"version"` no `manifest.json` (ex.: `0.3.0`) e faça commit.
+2. Crie e envie a tag com o mesmo número:
+   ```bash
+   git tag v0.3.0 && git push origin main v0.3.0
+   ```
+3. O GitHub Actions gera o `wpp-privacy.zip` e cria o Release sozinho. O link de download acima passa a entregar a versão nova.
 
 ## Quando o WhatsApp atualizar e algo parar de funcionar
 

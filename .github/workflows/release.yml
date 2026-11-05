@@ -1,0 +1,41 @@
+# Cria um Release no GitHub com o .zip da extensão sempre que uma tag vX.Y.Z é enviada.
+#   git tag v0.3.0 && git push origin v0.3.0
+# Link fixo para a última versão:
+#   https://github.com/iagothz/wpp-privacy/releases/latest/download/wpp-privacy.zip
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Conferir versão do manifest
+        run: |
+          MANIFEST=$(jq -r .version manifest.json)
+          TAG=${GITHUB_REF_NAME#v}
+          if [ "$MANIFEST" != "$TAG" ]; then
+            echo "::error::A tag ($TAG) não bate com a versão do manifest.json ($MANIFEST)"
+            exit 1
+          fi
+
+      - name: Gerar zip
+        run: |
+          mkdir -p dist
+          git archive --format=zip --prefix=wpp-privacy/ -o dist/wpp-privacy.zip HEAD \
+            manifest.json src popup options icons LICENSE INSTALAR.md
+
+      - name: Publicar release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/wpp-privacy.zip \
+            --title "WPP Privacy $GITHUB_REF_NAME" \
+            --notes "Baixe **wpp-privacy.zip** abaixo e siga o [guia de instalação](https://github.com/iagothz/wpp-privacy/blob/main/INSTALAR.md)."
