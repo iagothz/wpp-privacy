@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "WPP Privacy",
   "short_name": "WPP Privacy",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Privacidade e utilidades para o WhatsApp Web: blur, botão de pânico, bloqueio com PIN, respostas rápidas, notas e temas.",
   "icons": {
     "16": "icons/icon16.png",

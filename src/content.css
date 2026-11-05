@@ -11,7 +11,7 @@
  *   wpp-away             a janela perdeu o foco
  *
  * Atributos:
- *   data-wpp="msg|name|preview|presence"   o que o elemento é
+ *   data-wpp="msg|name|preview|presence|avatar"   o que o elemento é
  *   data-wpp-target                        item da lista que deve ser borrado
  *   data-wpp-typing                        "digitando...", "gravando áudio..."
  *   data-wpp-revealed                      mensagem revelada por clique
@@ -26,11 +26,40 @@ html.wpp-on.wpp-blurPreviews #pane-side [data-wpp-target] [data-wpp="preview"],
 html.wpp-on.wpp-blurNames #pane-side [data-wpp-target] [data-wpp="name"],
 html.wpp-on.wpp-blurNames.wpp-target-open #main header [data-wpp="name"],
 html.wpp-on.wpp-blurNames.wpp-target-open #main header [data-wpp="presence"],
-html.wpp-on.wpp-blurAvatars #pane-side [data-wpp-target] img,
-html.wpp-on.wpp-blurAvatars.wpp-target-open #main header img,
+html.wpp-on.wpp-blurAvatars #pane-side [data-wpp-target] [data-wpp="avatar"],
+html.wpp-on.wpp-blurAvatars.wpp-target-open #main header [data-wpp="avatar"],
+/* reserva: imagens fora de qualquer elemento já marcado (caso a marcação do avatar falhe) */
+html.wpp-on.wpp-blurAvatars #pane-side [data-wpp-target] img:not([data-wpp] img),
+html.wpp-on.wpp-blurAvatars.wpp-target-open #main header img:not([data-wpp] img),
 html.wpp-on.wpp-blurInput.wpp-target-open #main footer [contenteditable="true"] {
   filter: blur(var(--wpp-blur));
-  transition: filter .15s ease;
+  transition: filter .2s ease, opacity .2s ease;
+}
+
+/*
+ * Texto (nomes, prévias, presença): o WhatsApp corta o que passa da caixa do texto
+ * (overflow: hidden, para o "..."), e esse corte deixava o blur com bordas retas.
+ * A máscara esmaece as bordas dentro da própria caixa: o corte some e o blur
+ * vira uma mancha suave.
+ */
+html.wpp-on.wpp-blurPreviews #pane-side [data-wpp-target] [data-wpp="preview"],
+html.wpp-on.wpp-blurNames #pane-side [data-wpp-target] [data-wpp="name"],
+html.wpp-on.wpp-blurNames.wpp-target-open #main header [data-wpp="name"],
+html.wpp-on.wpp-blurNames.wpp-target-open #main header [data-wpp="presence"] {
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 14px, #000 calc(100% - 14px), transparent),
+    linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 14px, #000 calc(100% - 14px), transparent),
+    linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent);
+  mask-composite: intersect;
+  opacity: .85;
+}
+
+/* Avatar: borrado como um todo (foto, ícone padrão ou iniciais), sem borda dura. */
+html.wpp-on.wpp-blurAvatars [data-wpp="avatar"] {
+  border-radius: 50%;
 }
 
 /* ================= Revelar ================= */
@@ -50,6 +79,9 @@ html.wpp-ctrl-reveal #pane-side img,
 html.wpp-ctrl-reveal #main header img,
 html.wpp-ctrl-reveal #main footer [contenteditable="true"] {
   filter: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  opacity: 1 !important;
 }
 
 /* No modo clique, mostra que a mensagem é clicável */
