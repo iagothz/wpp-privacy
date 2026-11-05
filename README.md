@@ -10,8 +10,8 @@ Extensão para Chrome/Edge que protege suas conversas no **WhatsApp Web** de olh
 |---|---|---|
 | Mensagens da conversa | ✅ | Borra cada mensagem (texto, foto, vídeo, áudio); o hover revela uma por vez |
 | Prévia na lista de conversas | ✅ | Borra a última mensagem mostrada na lista |
-| Nomes de contatos e grupos | ⬜ | Borra nomes na lista e no topo da conversa |
-| Fotos de perfil | ⬜ | Borra fotos na lista e no topo da conversa |
+| Nomes de contatos e grupos | ✅ | Borra nomes na lista de conversas e no topo da conversa; o hover na conversa revela |
+| Fotos de perfil | ✅ | Borra fotos na lista de conversas e no topo da conversa; o hover na conversa revela |
 | Caixa de digitação | ⬜ | Borra o que você está escrevendo (revela no hover/foco) |
 | Tela toda ao sair da janela | ✅ | Borra tudo quando a janela perde o foco |
 | Intensidade | 8px | Ajustável de 2 a 20px |
