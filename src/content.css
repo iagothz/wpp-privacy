@@ -8,13 +8,12 @@
 :root { --wpp-blur: 8px; }
 
 /* ---------- Mensagens da conversa aberta ---------- */
-html.wpp-on.wpp-blurMessages #main .message-in,
-html.wpp-on.wpp-blurMessages #main .message-out {
+/* O content.js marca cada mensagem com data-wpp="msg" (ver tagMessages). */
+html.wpp-on.wpp-blurMessages [data-wpp="msg"] {
   filter: blur(var(--wpp-blur));
   transition: filter .15s ease;
 }
-html.wpp-on.wpp-blurMessages #main .message-in:hover,
-html.wpp-on.wpp-blurMessages #main .message-out:hover {
+html.wpp-on.wpp-blurMessages [data-wpp="msg"]:hover {
   filter: none;
 }
 

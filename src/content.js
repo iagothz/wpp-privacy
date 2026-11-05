@@ -41,16 +41,44 @@
     if (name) name.dataset.wpp = "name";
   }
 
+  // Mensagens: vários sinais, porque o WhatsApp troca classes com frequência.
+  // - data-id "true_..."/"false_..." é a chave interna de cada mensagem (bem estável)
+  // - .message-in / .message-out são as classes antigas dos balões
+  // - [data-pre-plain-text] marca o texto copiável de mensagens de texto
+  // Marcamos só o elemento mais externo de cada mensagem, para não somar blur.
+  const MESSAGE_CANDIDATES = [
+    '[data-id^="true_"]',
+    '[data-id^="false_"]',
+    ".message-in",
+    ".message-out",
+    "[data-pre-plain-text]"
+  ].join(", ");
+
+  function tagMessages() {
+    for (const el of document.querySelectorAll(MESSAGE_CANDIDATES)) {
+      if (el.closest("#pane-side")) continue;
+      const outer = el.parentElement?.closest(MESSAGE_CANDIDATES);
+      if (outer) {
+        if (el.dataset.wpp === "msg") delete el.dataset.wpp;
+        continue;
+      }
+      if (el.dataset.wpp !== "msg") el.dataset.wpp = "msg";
+    }
+  }
+
   let scheduled = false;
   function tagAll() {
     scheduled = false;
     document.querySelectorAll(CHAT_ITEMS).forEach(tagChatItem);
     tagHeader();
+    tagMessages();
   }
   function scheduleTag() {
     if (scheduled) return;
     scheduled = true;
-    requestAnimationFrame(tagAll);
+    // setTimeout em vez de requestAnimationFrame: rAF pausa em abas em segundo plano,
+    // e mensagens que chegam nesse período ficariam sem blur ao voltar.
+    setTimeout(tagAll, 50);
   }
 
   new MutationObserver(scheduleTag).observe(root, { childList: true, subtree: true });
